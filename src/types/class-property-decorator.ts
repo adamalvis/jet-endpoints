@@ -1,7 +1,7 @@
 type ClassPropertyDecorator = (target: undefined, context: {
-  kind: "field"
+  kind: 'field'
   name: string | symbol
-  access: { get(): unknown, set(value: unknown): void }
+  access: { get: () => unknown, set: (value: unknown) => void }
   static: boolean
   private: boolean
 }) => (initialValue: unknown) => unknown | void

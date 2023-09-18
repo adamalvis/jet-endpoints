@@ -1,85 +1,91 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import { EndpointConfig } from './registered-endpoints';
-import { container } from '../container';
-import { ParamPayload } from '../decorators/param';
-import { HandleParamConfig, getHandleParamConfigs } from '../utils/handle-param-metadata';
-import { BodyPayload } from '../decorators/body';
-import { convertObjToClass, isClass } from '../utils/class';
-import { Constructor } from '../types/constructor';
-import { validate, validateOrReject } from 'class-validator';
+import { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify'
+import { type EndpointConfig } from './registered-endpoints'
+import { container } from '../container'
+import { type ParamPayload } from '../decorators/param'
+import { type HandleParamConfig, getHandleParamConfigs } from '../utils/handle-param-metadata'
+import { type BodyPayload } from '../decorators/body'
+import { convertObjToClass, isClass } from '../utils/class'
+import { type Constructor } from '../types/constructor'
+import { validateOrReject } from 'class-validator'
 
 export class EndpointBuilder {
-  constructor(
-    private config: EndpointConfig,
-    private fastifyInstance: FastifyInstance,
+  constructor (
+    private readonly config: EndpointConfig,
+    private readonly fastifyInstance: FastifyInstance
   ) {}
 
-  build() {
+  build () {
     this.fastifyInstance[this.config.method](this.config.path, async (request, reply) => {
-      const endpoint = container.resolve(this.config.endpoint);
-      const handleParamConfigs = getHandleParamConfigs(endpoint);
-      const params = this.buildParameters(request, handleParamConfigs);
+      const endpoint = container.resolve(this.config.endpoint)
+      const handleParamConfigs = getHandleParamConfigs(endpoint)
+      const params = this.buildParameters(request, handleParamConfigs)
 
-      if (!(await this.validateParams(params, reply))) return;
+      if (!(await this.validateParams(params, reply))) return
 
-      return endpoint.handle(...params);
-    });
+      // set request/reply parameters
+      endpoint.request = request
+      endpoint.reply = reply
+
+      return await endpoint.handle(...params)
+    })
   }
 
-  private buildParameters(request: FastifyRequest, configs: HandleParamConfig[]): any[] {
-    const params = [];
+  private buildParameters (request: FastifyRequest, configs: HandleParamConfig[]): any[] {
+    const params = []
 
-    configs.sort((a, b) => a.index > b.index ? 1 : -1);
+    configs.sort((a, b) => a.index > b.index ? 1 : -1)
 
     for (const config of configs) {
       switch (config.type) {
         case 'param':
-          params.push(this.buildRouteParam(config.payload, request));
-          break;
+          params.push(this.buildRouteParam(config.payload, request))
+          break
         case 'body':
-          params.push(this.buildBodyParam(config.payload, request));
-          break;
+          params.push(this.buildBodyParam(config.payload, request))
+          break
       }
     }
 
-    return params;
+    return params
   }
 
-  private buildRouteParam(payload: ParamPayload, request: FastifyRequest): string | undefined {
-    return (request.params as Record<string, string>)[payload.paramName];
+  private buildRouteParam (payload: ParamPayload, request: FastifyRequest): string | undefined {
+    return (request.params as Record<string, string>)[payload.paramName]
   }
 
-  private buildBodyParam(
+  private buildBodyParam (
     payload: BodyPayload,
-    request: FastifyRequest,
+    request: FastifyRequest
   ): Record<string, any> | Constructor<any> {
-    const target: Record<string, any> = !payload.key ? request.body : payload.key.split('.').reduce((currentValue, currentKey) => {
-      return currentValue?.[currentKey];
-    }, request.body as any);
+    const target: Record<string, any> = !payload.key
+      ? request.body
+      : payload.key.split('.').reduce<any>((currentValue, currentKey) => {
+        return currentValue?.[currentKey]
+      }, request.body)
 
     if (payload.validatorCls) {
-      return convertObjToClass(target, payload.validatorCls);
+      return convertObjToClass(target, payload.validatorCls)
     }
 
-    return target;
+    return target
   }
 
-  private async validateParams(params: any[], reply: FastifyReply): Promise<boolean> {
+  private async validateParams (params: any[], reply: FastifyReply): Promise<boolean> {
     // validate all classes with class-validator
 
     for (const param of params) {
       if (isClass(param)) {
         try {
-          await validateOrReject(param);
+          await validateOrReject(param)
         } catch (errors) {
           reply.code(422).send({
             message: 'Invalid Request',
-            errors: errors,
-          });
+            errors
+          })
         }
       }
     }
 
-    return true;
+    return true
   }
 }

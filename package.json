@@ -5,14 +5,22 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
+    "lint:fix": "eslint --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Adam Alvis <adam.alvis@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.6.2",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^5.0.1"
+    "rimraf": "^5.0.1",
+    "typescript": "*"
   },
   "dependencies": {
     "class-validator": "^0.14.0",
