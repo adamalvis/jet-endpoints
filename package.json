@@ -1,0 +1,26 @@
+{
+  "name": "jet-endpoints",
+  "version": "0.1.0",
+  "description": "Jet endpoints drives API development at super-sonic speeds",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Alvis <adam.alvis@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.6.2",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^5.0.1"
+  },
+  "dependencies": {
+    "class-validator": "^0.14.0",
+    "fastify": "^4.23.2",
+    "fastify-plugin": "^4.5.1",
+    "tsyringe": "^4.8.0"
+  },
+  "bin": {
+    "jet-build": "./bin/jet-build.js"
+  }
+}
