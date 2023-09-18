@@ -1,7 +1,7 @@
 {
-  "name": "jet-endpoints",
+  "name": "fastify-jet",
   "version": "0.1.0",
-  "description": "Jet endpoints drives API development at super-sonic speeds",
+  "description": "Jet is a Fastify plugins that enables lightning fast enterprise API development.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
