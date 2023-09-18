@@ -1,3 +1,3 @@
-import { container as tContainer } from 'tsyringe'
+import { container as tContainer } from 'tsyringe';
 
-export const container = tContainer.createChildContainer()
+export const container = tContainer.createChildContainer();

@@ -1,9 +1,8 @@
-import { singleton } from 'tsyringe'
-import { Endpoint } from '../endpoint'
-import { type EndpointClass } from '../endpoint/endpoint'
-import { registerEndpoint } from '../endpoint/registered-endpoints'
+import { singleton } from 'tsyringe';
+import { type EndpointClass } from '../endpoint/endpoint';
+import { registerEndpoint } from '../endpoint/registered-endpoints';
 
-type RouteMethods = 'get' | 'post' | 'put' | 'patch' | 'delete'
+type RouteMethods = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 export interface RouteOpts {
   path: string
@@ -17,8 +16,8 @@ export interface RouteOpts {
  * @param opts.method method of endpoint
  */
 export const route = (opts: RouteOpts) => (target: EndpointClass) => {
-  registerEndpoint(target, opts)
+  registerEndpoint(target, opts);
 
   // register with di container
-  singleton()(target)
-}
+  singleton()(target);
+};

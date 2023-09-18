@@ -1,5 +1,5 @@
-import { type Constructor } from '../types/constructor'
-import { type HandleParamConfig, setHandleParamConfigs } from '../utils/handle-param-metadata'
+import { type Constructor } from '../types/constructor';
+import { type HandleParamConfig, setHandleParamConfigs } from '../utils/handle-param-metadata';
 
 export interface BodyPayload {
   /** Retrieves body at specified key, can use dot syntax for heavily nested properties */
@@ -8,12 +8,12 @@ export interface BodyPayload {
   validatorCls?: Constructor<any>
 }
 
-export const body = (opts?: BodyPayload) => (target: Object, _: string | symbol, parameterIndex: number) => {
+export const body = (opts?: BodyPayload) => (target: any, _: string | symbol, parameterIndex: number) => {
   const config: HandleParamConfig<BodyPayload> = {
     type: 'body',
     index: parameterIndex,
     payload: opts ?? {}
-  }
+  };
 
-  setHandleParamConfigs(config, target)
-}
+  setHandleParamConfigs(config, target);
+};
