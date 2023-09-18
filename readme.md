@@ -1,3 +1,3 @@
-# Fastify-Jet - Supersonic enterprise APIs
+# Fastify-Jet - Supersonic Enterprise APIs
 
 TODO...
